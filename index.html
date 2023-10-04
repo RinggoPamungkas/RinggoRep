@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Tim Esports MLBB</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <h1>Most Kill MLBB player MPL indo</h1>
+    
+    <table>
+        <tr>
+            <th>Peringkat</th>
+            <th>Nama player</th>
+            <th>Total Kill <button onclick="sortTable()">Urutkan</button></th>
+            <th>Nama Tim</th>
+            <th>Role Player</th>
+            <th>Aksi</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Albertt</td>
+            <td>1024</td>
+            <td>ONIC</td>
+            <td>Jungler</td>
+            <td><button onclick="editRow(1)">Edit</button> <button onclick="deleteRow(1)">Delete</button></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Celiboy</td>
+            <td>1314</td>
+            <td>Alter Ego</td>
+            <td>Jungler</td>
+            <td><button onclick="editRow(2)">Edit</button> <button onclick="deleteRow(2)">Delete</button></td>
+        </tr>
+        <!-- Tambahkan baris data tim esports MLBB lainnya sesuai kebutuhan -->
+        
+    </table>
+
+    <!-- Form untuk menambahkan data baru -->
+    <!-- Form untuk mengedit atau menambahkan data -->
+    <div>
+        <h2>Tambah/Edit Data Player</h2>
+        <input type="text" id="namaPlayer" placeholder="Nama Player">
+        <input type="text" id="totalKill" placeholder="Total Kill">
+        <input type="text" id="namaTim" placeholder="Nama Tim">
+        <input type="text" id="rolePlayer" placeholder="Role Player">
+        <button onclick="addRow()">Tambah</button>
+        <button onclick="saveRow()">Simpan</button> <!-- Tombol Simpan -->
+    </div>
+
+    
+    <script>
+        var editRowIndex = -1; // Variabel untuk melacak baris yang sedang diedit
+        var isAscending = true; // Variabel untuk melacak arah pengurutan
+
+        // Fungsi untuk mengurutkan tabel berdasarkan total kill
+        function sortTable() {
+            var table = document.querySelector('table');
+            var rows, switching, i, x, y, shouldSwitch;
+
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+
+                    x = parseFloat(rows[i].getElementsByTagName("td")[2].innerHTML);
+                    y = parseFloat(rows[i + 1].getElementsByTagName("td")[2].innerHTML);
+
+                    if (isAscending) {
+                        if (x > y) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else {
+                        if (x < y) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+
+            isAscending = !isAscending; // Mengganti arah pengurutan
+
+            // Setelah pengurutan selesai, perbarui peringkat
+            updateRank();
+        }
+
+        // Fungsi untuk memperbarui peringkat setelah pengurutan
+        function updateRank() {
+            var table = document.querySelector('table');
+            var rows = table.rows;
+
+            for (var i = 1; i < rows.length; i++) {
+                rows[i].cells[0].innerHTML = i;
+            }
+        }
+
+        // Fungsi untuk menambahkan baris data
+        function addRow() {
+            var table = document.querySelector('table');
+            var newRow = table.insertRow(table.rows.length);
+
+            var peringkatCell = newRow.insertCell(0);
+            var namaPlayerCell = newRow.insertCell(1);
+            var totalKillCell = newRow.insertCell(2);
+            var namaTimCell = newRow.insertCell(3);
+            var rolePlayerCell = newRow.insertCell(4);
+            var aksiCell = newRow.insertCell(5);
+
+            peringkatCell.innerHTML = table.rows.length - 1;
+            namaPlayerCell.innerHTML = document.getElementById('namaPlayer').value;
+            totalKillCell.innerHTML = document.getElementById('totalKill').value;
+            namaTimCell.innerHTML = document.getElementById('namaTim').value;
+            rolePlayerCell.innerHTML = document.getElementById('rolePlayer').value;
+            aksiCell.innerHTML = '<button onclick="editRow(' + (table.rows.length - 1) + ')">Edit</button> <button onclick="deleteRow(' + (table.rows.length - 1) + ')">Delete</button>';
+
+            document.getElementById('namaPlayer').value = '';
+            document.getElementById('totalKill').value = '';
+            document.getElementById('namaTim').value = '';
+            document.getElementById('rolePlayer').value = '';
+        }
+
+        // Fungsi untuk mengedit baris data
+        // Fungsi untuk mengedit baris data
+        function editRow(rowIdx) {
+            var table = document.querySelector('table');
+            var row = table.rows[rowIdx];
+            var cells = row.cells;
+
+            document.getElementById('namaPlayer').value = cells[1].innerHTML;
+            document.getElementById('totalKill').value = cells[2].innerHTML;
+            document.getElementById('namaTim').value = cells[3].innerHTML;
+            document.getElementById('rolePlayer').value = cells[4].innerHTML;
+
+        // Set indeks baris yang sedang diedit
+            editRowIndex = rowIdx;
+        }
+
+
+
+        // Fungsi untuk menghapus baris data
+        function deleteRow(rowIdx) {
+            var table = document.querySelector('table');
+            table.deleteRow(rowIdx);
+
+            // Setelah menghapus baris, perbarui peringkat
+            updateRank();
+        }
+        function saveRow() {
+            if (editRowIndex !== -1) {
+                var table = document.querySelector('table');
+                var row = table.rows[editRowIndex];
+                var cells = row.cells;
+
+                cells[1].innerHTML = document.getElementById('namaPlayer').value;
+                cells[2].innerHTML = document.getElementById('totalKill').value;
+                cells[3].innerHTML = document.getElementById('namaTim').value;
+                cells[4].innerHTML = document.getElementById('rolePlayer').value;
+
+            // Reset indeks baris yang sedang diedit
+                editRowIndex = -1;
+            }
+        // Bersihkan nilai input
+            document.getElementById('namaPlayer').value = '';
+            document.getElementById('totalKill').value = '';
+            document.getElementById('namaTim').value = '';
+            document.getElementById('rolePlayer').value = '';
+        }
+
+    </script>
+</body>
+</html>
